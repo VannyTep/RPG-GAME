@@ -10,10 +10,16 @@ public class PlayerController : MonoBehaviour
 
     // Animation
     Animator animator;
+
     bool IsFacingLeft;
     bool IsFacingRight;
     bool IsFacingUp;
     bool IsFacingDown = true;
+    
+    bool IsLeft;
+    bool IsRight;
+    bool IsUp;
+    bool IsDown = true;
 
     void Awake() 
     {
@@ -51,6 +57,9 @@ public class PlayerController : MonoBehaviour
     {
         Horizontal_Animation_Function();
         Vertical_Animation_Function();
+        // Changing_Facing_Animation();
+        Make_Sure_Player_Facing();
+        Attack_System();
     }
 
     #region Horizontal_Animation
@@ -66,26 +75,19 @@ public class PlayerController : MonoBehaviour
             // Left&Right
             IsFacingLeft = true;
             IsFacingRight = false;
-            // Down&Up
-            // IsFacingDown = true;
-            // IsFacingUp = false;
         }
         else if (movement.x >= 0.01)
         {
             // Left&Right
             IsFacingLeft = false;
             IsFacingRight = true;
-            // Down&Up
-            // IsFacingDown = false;
-            // IsFacingUp = true;
         }
 
-
-        // The idle of left and right
+        // The idle of left and right TEST
         // left
         if (movement.x == 0 && IsFacingLeft == true)
         {
-            animator.SetBool("IsLeftSide", true);
+            animator.SetBool("IsLeftSide", IsFacingLeft);
         }
         else
         {
@@ -94,7 +96,7 @@ public class PlayerController : MonoBehaviour
         // Right
         if (movement.x == 0 && IsFacingRight == true)
         {
-            animator.SetBool("IsRightSide", true);
+            animator.SetBool("IsRightSide", IsFacingRight);
         }
         else
         {
@@ -116,26 +118,19 @@ public class PlayerController : MonoBehaviour
             // Down&Up
             IsFacingDown = true;
             IsFacingUp = false;
-            // Left&Right
-            // IsFacingLeft = true;
-            // IsFacingRight = false;
         }
         else if (movement.y >= 0.01)
         {
             // Down&Up
             IsFacingDown = false;
             IsFacingUp = true;
-            // Left&Right
-            // IsFacingLeft = false;
-            // IsFacingRight = true; 
         }
-
 
         // The idle of down and up
         // down
         if (movement.y == 0 && IsFacingDown == true)
         {
-            animator.SetBool("IsDownSide", true);
+            animator.SetBool("IsDownSide", IsFacingDown);
         }
         else
         {
@@ -144,13 +139,73 @@ public class PlayerController : MonoBehaviour
         // up
         if (movement.y == 0 && IsFacingUp == true)
         {
-            animator.SetBool("IsUpSide", true);
+            animator.SetBool("IsUpSide", IsFacingUp);
         }
         else
         {
             animator.SetBool("IsUpSide", false);
         }
     }
+    #endregion
+
+//  #region Changing_Facing_Animation
+//     void Changing_Facing_Animation()
+//     {
+//         // Up & Down
+//         if (IsFacingDown == true || IsFacingUp == true)
+//         {
+//             IsFacingLeft = false;
+//             IsFacingRight = false;
+//         }
+
+//         // Left & Right
+//         if (IsFacingLeft == true || IsFacingRight == true)
+//         {
+//             IsFacingUp = false;
+//             IsFacingDown = false;
+//         }
+//     }
+// #endregion
+
+    #region Make_Sure_Player_Facing
+        void Make_Sure_Player_Facing()
+        {
+            if (movement.x > 0.01)
+            {
+                IsRight = true;
+                IsLeft = false;
+            }
+            else if (movement.x < -0.01)
+            {
+                IsRight = false;
+                IsLeft = true;
+            }
+            else if (movement.y > 0.01)
+            {
+                IsUp = true;
+                IsDown = false;
+            }
+            else if (movement.y < -0.01)
+            {
+                IsDown = true;
+                IsUp = false;
+            }
+
+            animator.SetBool("IsLeft", IsLeft);
+            animator.SetBool("IsRight", IsRight);
+            animator.SetBool("IsDown", IsDown);
+            animator.SetBool("IsUp", IsUp);
+        } 
+    #endregion
+
+    #region Attack_System
+        void Attack_System()
+        {
+            if (Input.GetKey(KeyCode.Space))
+            {
+                animator.SetTrigger("IsAttack");
+            }
+        }
     #endregion
 #endregion
 }
